@@ -9,6 +9,7 @@
 > 切勿滥用：大批量数据下载有封号风险，若违规大批量下载导致账号被封，与脚本无关。
 
 ## 简介
+
 小红薯助手可以帮助你一键下载你喜欢的图片、视频、实况。
 
 功能：
@@ -36,7 +37,7 @@
 
 ### 安装脚本后不显示浮动下载按钮
 
-1. 看下油猴脚本有没有开启开发者模式，请参考 https://www.tampermonkey.net/faq.php?version=5.3.2&ext=dhdg#Q209。
+1. 看下油猴脚本有没有开启开发者模式，请参考 <https://www.tampermonkey.net/faq.php?version=5.3.2&ext=dhdg#Q209。>
 2. 看下你的浏览器版本：升级到最新就好
 3. 看下网络问题，由于有的代码需要依赖于`jsdelivr`提供的`cdn`服务，请检查能否正常访问【[点击测试](https://www.itdog.cn/ping/www.jsdelivr.com)】。如不能访问，建议稍后重试或切换网络。
 
@@ -57,7 +58,7 @@
 
 文件命名规则配置：
 
-1. 请勿使用特殊字符，特殊字符请参考 https://blog.csdn.net/w8y56f/article/details/121189351
+1. 请勿使用特殊字符，特殊字符请参考 <https://blog.csdn.net/w8y56f/article/details/121189351>
 
 2. 全局变量
 
@@ -109,7 +110,7 @@
 
 ## 远程下载
 
-推荐使用：https://motrix.app/zh-CN/
+推荐使用：<https://motrix.app/zh-CN/>
 
 ## 基本原理
 
@@ -117,4 +118,4 @@ hook XMLHttpRequest，提取响应数据，进行解析展示。
 
 ## 支持作者
 
-<img src="./assets/10b34f40cf95a2c9b5d44b13efec712.jpg" alt="10b34f40cf95a2c9b5d44b13efec712" style="zoom:25%;" />
+<img src="./assets/10b34f40cf95a2c9b5d44b13efec712.jpg" alt="支持作者" style="width:360px" />
