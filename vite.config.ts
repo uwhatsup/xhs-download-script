@@ -5,6 +5,7 @@ import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import packageJson from './package.json'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -41,7 +42,7 @@ export default defineConfig({
         name: '小红书下载助手',
         license: 'MIT',
         'run-at': 'document-end',
-        version: '1.0.0',
+        version: packageJson.version,
         // connect: ['localhost'],
       },
       build: {

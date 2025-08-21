@@ -11,7 +11,9 @@ export const videoServer = [
   'https://sns-video-al.xhscdn.com/',
 ]
 export const jpgParams = 'imageView2/2/w/format/jpg'
-export const keyReg = /(?<=\/)(spectrum\/)?[a-z0-9A-Z\-]+(?=!)/
+// export const keyReg = /(?<=\/)(spectrum\/)?[a-z0-9A-Z\-]+(?=!)/
+export const keyReg =
+  /(?<=\/)(spectrum\/)?((note_pre_post_uhdr|notes_pre_post)\/)?[a-z0-9A-Z\-]+(?=!)/
 export const nameRule = `$<序号>.$
 [<发布者昵称>]
 <标题>
