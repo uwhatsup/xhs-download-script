@@ -106,7 +106,8 @@
             @change="storageStore.setPreferLive"
           >
             <div class="flex-center">
-              如果文件类型为实况，那么优先下载实况视频，否则按照所选的下载类型进行下载
+              <!-- 如果文件类型为实况，那么优先下载实况视频，否则按照所选的下载类型进行下载 -->
+              实况优先
             </div>
           </el-checkbox>
         </el-form-item>
