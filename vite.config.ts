@@ -32,9 +32,9 @@ export default defineConfig({
       entry: 'src/main.ts',
       userscript: {
         icon: 'https://picasso-static.xiaohongshu.com/fe-platform/f43dc4a8baf03678996c62d8db6ebc01a82256ff.png',
-        author: 'x',
+        author: 'waelun',
         description: '小红书图片、视频、实况下载',
-        namespace: '3268397881@qq.com',
+        namespace: 'waelun',
         match: [
           'https://www.xiaohongshu.com/*',
           'https://www.xiaohongshu.com/explore/*',
