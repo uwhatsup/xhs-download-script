@@ -1,12 +1,11 @@
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import monkey, { cdn, util } from 'vite-plugin-monkey'
-import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import packageJson from './package.json'
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -33,8 +32,8 @@ export default defineConfig({
       userscript: {
         icon: 'https://picasso-static.xiaohongshu.com/fe-platform/f43dc4a8baf03678996c62d8db6ebc01a82256ff.png',
         author: 'waelun',
-        description: '小红书图片、视频、实况下载',
         namespace: 'waelun',
+        description: '小红书图片、视频、实况下载',
         match: [
           'https://www.xiaohongshu.com/*',
           'https://www.xiaohongshu.com/explore/*',
@@ -43,7 +42,7 @@ export default defineConfig({
         license: 'MIT',
         'run-at': 'document-end',
         version: packageJson.version,
-        // connect: ['localhost'],
+        connect: ['*'],
       },
       build: {
         externalGlobals: {
@@ -51,14 +50,6 @@ export default defineConfig({
             .jsdelivr('Vue', 'dist/vue.global.prod.min.js')
             .concat(util.dataUrl(';window.Vue=Vue;window.VueDemi=Vue;')),
           dayjs: cdn.jsdelivr('dayjs', 'dayjs.min.js'),
-          'dayjs/plugin/timezone': cdn.jsdelivr(
-            'dayjs_plugin_timezone',
-            'plugin/timezone.min.js'
-          ),
-          'dayjs/plugin/utc': cdn.jsdelivr(
-            'dayjs_plugin_utc',
-            'plugin/utc.min.js'
-          ),
           streamsaver: cdn
             .jsdelivr('StreamSaver', 'StreamSaver.js')
             .concat(util.dataUrl(';window.StreamSaver=streamSaver;')),
@@ -73,11 +64,13 @@ export default defineConfig({
       },
     }),
   ],
+
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
     },
   },
+
   css: {
     preprocessorOptions: {
       scss: {

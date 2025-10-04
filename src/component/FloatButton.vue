@@ -1,13 +1,20 @@
+<!-- 
+1. 可拖拽 可点击
+2. 可半透明 可自动吸附 有过度效果 
+-->
 <template>
   <div
     ref="btnRef"
-    title="小红书下载助手"
+    :title="appName"
+    class="xiaohongshu-download-script_float-btn"
+    :style="{
+      left: floatButtonStorageStore.left,
+      top: floatButtonStorageStore.top,
+    }"
     :class="{
-      'xhs-download-float-btn': true,
-      right: storageStore.floatBtnPosition.left != '0px',
+      right: floatButtonStorageStore.left != '0px',
       active: isDragging,
     }"
-    :style="storageStore.floatBtnPosition"
     @mousedown="handleBtnMousedown"
     @mouseup="handleBtnMouseUp"
     @click="handleBtnClick"
@@ -19,13 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import { useStorageStore } from '@/store/storage'
+import { useFloatButtonStorageStore } from '@/store/storage/floatbtn'
 import { FolderDown } from 'lucide-vue-next'
+import { appName } from '@/constant'
 const emit = defineEmits(['click'])
 const btnRef = ref<HTMLMapElement>()
 
-const storageStore = useStorageStore()
-
+const floatButtonStorageStore = useFloatButtonStorageStore()
 let isDragging = false
 
 // 限制
@@ -43,8 +50,8 @@ let duration = 0
 function initState() {
   maxTop = window.innerHeight - btnRef.value?.clientHeight!
   maxLeft = window.innerWidth - btnRef.value?.clientWidth!
-  if (storageStore.floatBtnPosition.left != '0px') {
-    storageStore.floatBtnPosition.left = maxLeft + 'px'
+  if (floatButtonStorageStore.left != '0px') {
+    floatButtonStorageStore.left = maxLeft + 'px'
   }
 }
 
@@ -90,10 +97,10 @@ function handleWindowMouseUp() {
 }
 function setPosition(left?: number, top?: number) {
   if (left != undefined) {
-    storageStore.floatBtnPosition.left = left + 'px'
+    floatButtonStorageStore.left = left + 'px'
   }
   if (top != undefined) {
-    storageStore.floatBtnPosition.top = top + 'px'
+    floatButtonStorageStore.top = top + 'px'
   }
 }
 
@@ -122,34 +129,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
-.xhs-download-float-btn {
-  user-select: none;
-  color: #fff;
-  background-color: rgba(255, 48, 79, 0.5);
-  z-index: 99999;
-  position: fixed;
-  border-radius: 0 30px 30px 0;
-  display: inline-block;
-  width: fit-content;
-  transition: all ease-in-out 0.3s;
-  cursor: pointer;
-  &.right {
-    border-radius: 30px 0 0 30px;
-  }
-  &:hover {
-    background-color: rgba(255, 48, 79, 1);
-    border-radius: 30px;
-  }
-  &:active {
-    background-color: rgba(255, 48, 79, 1);
-    border-radius: 30px;
-    transition: none;
-  }
-  .icon {
-    padding: 10px 20px;
-    text-align: center;
-    transform: translateY(3px);
-  }
-}
-</style>
+<style scoped lang="scss"></style>

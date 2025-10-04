@@ -1,12 +1,12 @@
 import { GM_xmlhttpRequest } from '$'
-import { useStorageStore } from '@/store/storage'
+import { useSettingStorageStore } from '@/store/storage/setting'
 
 const request = (url: string, data?: any, method: string = 'POST') => {
-  const store = useStorageStore()
+  const settingStore = useSettingStorageStore()
   return new Promise<any>((resolve, reject) => {
     GM_xmlhttpRequest({
       method,
-      url: 'http://' + store.setting.jsonRpcUrl + url,
+      url: settingStore.jsonRpcUrl + url,
       data: data ? JSON.stringify(data) : '',
       nocache: true,
       timeout: 20000,
@@ -35,6 +35,8 @@ const request = (url: string, data?: any, method: string = 'POST') => {
         }
       },
       onerror: function (err) {
+        console.log('err', err)
+        ElMessage.error(err.error || '连接出错')
         reject(err)
       },
       ontimeout: function () {
@@ -45,13 +47,13 @@ const request = (url: string, data?: any, method: string = 'POST') => {
 }
 
 export const reqAria2Version = async () => {
-  const store = useStorageStore()
+  const settingStore = useSettingStorageStore()
   try {
     const res = await request('', {
       id: '小红书下载助手_版本检查',
       // jsonrpc: '2.0',
       method: 'aria2.getVersion',
-      params: [`token:${store.setting.jsonRpcToken}`],
+      params: [`token:${settingStore.jsonRpcToken}`],
     })
     if (res.error?.message == 'Unauthorized') {
       ElMessage.error('连接失败，请检查秘钥是否正确')
@@ -67,9 +69,10 @@ export const reqAria2Download = async (
   list?: { name: string; url: string; dir: string }[]
 ) => {
   if (!list?.length) return
-  const store = useStorageStore()
-  const token = store.setting.jsonRpcToken
-  const downloadLocation = store.setting.downloadLocation
+  const settingStore = useSettingStorageStore()
+
+  const token = settingStore.jsonRpcToken
+  const downloadLocation = settingStore.downloadLocation
   const urlList = list.map((item) => {
     const urlItem: {
       dir?: string

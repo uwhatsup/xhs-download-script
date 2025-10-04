@@ -36,6 +36,7 @@ export interface Share_info {
 
 export interface User {
   user_id: string
+  red_id?: string
   nickname: string
   avatar: string
   xsec_token: string

@@ -1,0 +1,177 @@
+@use './var.scss' as *;
+
+// 公共样式
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.form-title {
+  font-weight: bold;
+}
+
+.form-example {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  font-size: 12px;
+  color: #999;
+  &.important,
+  a {
+    color: $primary-color;
+  }
+  &a {
+    text-decoration: underline;
+  }
+}
+
+// 应用内样式
+.xiaohongshu-download-script {
+  position: relative;
+  // 浮动按钮
+  &_float-btn {
+    user-select: none;
+    color: #fff;
+    background-color: rgba($color: $primary-color, $alpha: 0.5);
+    z-index: 99999;
+    position: fixed;
+    border-radius: 0 30px 30px 0;
+    display: inline-block;
+    width: fit-content;
+    transition: all ease-in-out 0.3s;
+    cursor: pointer;
+    &.right {
+      border-radius: 30px 0 0 30px;
+    }
+    &:hover {
+      background-color: $primary-color;
+      border-radius: 30px;
+    }
+    &:active {
+      background-color: $primary-color;
+      border-radius: 30px;
+      transition: none;
+    }
+    .icon {
+      padding: 10px 20px;
+      text-align: center;
+      transform: translateY(3px);
+    }
+  }
+}
+
+.xiaohongshu-download-script_dialog {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
+  // 拖拽线条
+  .drag-line {
+    width: 5px;
+    background-color: #eee;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    cursor: w-resize;
+    transition: all ease 0.3s;
+    &:hover,
+    &.active {
+      background-color: $primary-color;
+    }
+  }
+  // 拖拽的时候的样式
+  &.drag {
+    transition: none !important;
+  }
+  .tool-box {
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    display: flex;
+    .download-item-size {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+      .title {
+        flex-shrink: 0;
+      }
+    }
+  }
+  .download-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    &_top {
+      flex: 1; /* 占满剩余空间 */
+      overflow: auto; /* 允许上下滚动 */
+    }
+    .custom-download {
+      margin-top: 10px;
+      .el-form-item {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // 文件列表样式
+  .file-list {
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #eee;
+    .el-checkbox {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      .el-checkbox__input {
+        position: absolute;
+        top: 0px;
+        left: 0;
+      }
+      .el-checkbox__label {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    }
+    .item {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      .progress,
+      .tag {
+        position: absolute;
+        background-color: rgba(#000, 0.5);
+        color: white;
+        padding: 5px 10px;
+      }
+      .tag {
+        right: 0;
+        bottom: 0;
+        border-top-left-radius: 10px;
+      }
+      .progress {
+        top: 0;
+        right: 0;
+        border-bottom-left-radius: 10px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}

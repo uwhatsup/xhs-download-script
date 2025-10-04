@@ -10,6 +10,7 @@ export interface Tag_list {
 
 export interface User {
   user_id: string
+  red_id?: string
   nickname: string
   avatar: string
   xsec_token: string

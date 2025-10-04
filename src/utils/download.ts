@@ -1,6 +1,63 @@
 import filetypeinfo from 'magic-bytes.js'
 import StreamSaver from 'streamsaver'
 
+// 使用前提
+// 1. 同源
+// 2. 文件名主要是后端控制，后端的优先级是大于前端的download
+// 3. 如果后端没有指定Content-Disposition 在谷歌中测试，是不生效的
+// 在处理文件下载时，Content-Disposition 头部中的 filename 属性和前端 <a> 标签的 download 属性之间的优先级如下：
+// Content-Disposition 的 filename 属性：服务器返回的 Content-Disposition 头部中的 filename 属性通常会优先于前端的 download 属性。如果服务器指定了一个文件名，浏览器一般会使用这个文件名来保存下载的文件。
+
+// download 属性：如果没有设置 Content-Disposition 头部，或者在某些情况下，download 属性会生效，并使用其指定的文件名。但如果同时存在并且冲突，浏览器大多数情况下会优先使用服务器返回的 filename。
+
+// 总结
+// 优先级：Content-Disposition > download
+// 建议：为了确保一致性，建议在服务器端通过 Content-Disposition 指定文件名，尤其是在需要提供下载功能的情况下。这样可以避免由于浏览器差异导致的意外行为。
+// export function downloadFileWithLink(url: string, fileName: string) {
+//   console.log('链接点击下载', url, fileName);
+//   const a = document.createElement('a');
+//   a.href = url;
+//   a.download = fileName;
+//   a.title = fileName;
+//   a.target = '_blank';
+//   document.body.appendChild(a);
+//   a.click();
+//   document.body.removeChild(a);
+// }
+// xhr下载
+export function downloadFileWithXhr(url: string, fileName: string) {
+  console.log(url)
+  console.log(fileName)
+  const xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.responseType = 'blob'
+  xhr.onload = async function () {
+    if (xhr.status === 200) {
+      const blob = xhr.response as Blob
+      let sub
+      const buffer = await blob.arrayBuffer()
+      const fileType = filetypeinfo(new Uint8Array(buffer))
+      sub = '.' + fileType[0].extension
+
+      fileName += sub
+      // 获取响应的类型
+      console.log('推断的文件类型', fileType)
+      console.log('文件名:', fileName)
+      const link = document.createElement('a')
+      const href = URL.createObjectURL(blob)
+      link.href = href
+      link.download = fileName
+      link.click()
+      URL.revokeObjectURL(href)
+    }
+  }
+  xhr.onerror = (error) => {
+    console.log('下载出错', error)
+  }
+  xhr.send()
+  return xhr
+}
+// 大型文件下载
 export async function downloadLargeFile(
   url: string,
   fileName: string,
@@ -47,7 +104,6 @@ export async function downloadLargeFile(
         onProgress(loaded)
       }
     }
-
     // 关闭写入器
     writer.close()
     console.log(`${fileName} downloaded successfully!`)
