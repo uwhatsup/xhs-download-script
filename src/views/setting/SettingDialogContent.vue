@@ -96,22 +96,22 @@ watch(
     () => settingStorageStore.timeFormatRule,
   ],
   async () => {
-    if (!noteStore?.title) {
+    if (!noteStore?.note?.title) {
       exampleName.value = '打开笔记后方可预览'
       return
     }
     exampleName.value = getFileNameByNamingRule(
       {
         index: 1,
-        title: noteStore.title,
-        ipLocation: noteStore.ip_location,
-        nickname: noteStore.user.nickname,
-        noteId: noteStore.note_id,
+        title: noteStore?.note?.title,
+        ipLocation: noteStore?.note?.ip_location,
+        nickname: noteStore?.note?.user.nickname,
+        noteId: noteStore?.note?.note_id,
         publishTime: formatTime(
-          noteStore.time,
+          noteStore?.note?.time,
           settingStorageStore.timeFormatRule
         ),
-        userId: noteStore.user.user_id,
+        userId: noteStore?.note?.user.user_id,
         redId: await getRedId(),
       },
       settingStorageStore.nameRule

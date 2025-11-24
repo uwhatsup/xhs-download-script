@@ -60,8 +60,7 @@ export function downloadFileWithXhr(url: string, fileName: string) {
 // 大型文件下载
 export async function downloadLargeFile(
   url: string,
-  fileName: string,
-  onProgress?: (loaded: number, total?: number) => void
+  fileName: string
 ): Promise<void> {
   console.log('开始下载', fileName, url)
   try {
@@ -77,8 +76,8 @@ export async function downloadLargeFile(
     }
 
     // 获取文件总大小（如果可用）
-    const contentLength = response.headers.get('Content-Length')
-    const total = contentLength ? parseInt(contentLength, 10) : undefined
+    // const contentLength = response.headers.get('Content-Length')
+    // const total = contentLength ? parseInt(contentLength, 10) : undefined
 
     // 创建读取器
     const reader = response.body?.getReader()
@@ -98,11 +97,6 @@ export async function downloadLargeFile(
 
       // 更新进度
       loaded += value.length
-      if (onProgress && total !== undefined) {
-        onProgress(loaded, total)
-      } else if (onProgress) {
-        onProgress(loaded)
-      }
     }
     // 关闭写入器
     writer.close()

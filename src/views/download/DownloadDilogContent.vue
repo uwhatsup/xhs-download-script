@@ -1,94 +1,145 @@
 <template>
   <div class="download-container">
-    <div class="download-container_top">
-      <!-- 图片列表 -->
-      <el-checkbox-group
-        v-model="state.checkList"
-        v-if="noteStore?.image_list?.length"
+    <el-tabs type="border-card" v-model="activeTab">
+      <el-tab-pane lazy name="normal" label="图片">
+        <div class="download-container_top">
+          <!-- 图片列表 -->
+          <el-checkbox-group
+            v-model="state.checkList"
+            v-if="noteStore?.note?.image_list?.length"
+          >
+            <div
+              class="file-list"
+              :style="`grid-template-columns: repeat(${settingStorageStore.downloadContainerCol}, 1fr)`"
+            >
+              <el-checkbox
+                :value="index"
+                size="large"
+                v-for="(item, index) in noteStore?.note?.image_list"
+                :key="index"
+              >
+                <div class="item">
+                  <img :src="item.url_default" />
+                  <div v-if="item.live_photo" class="tag">实况</div>
+                  <div v-else class="tag">图片</div>
+                </div>
+              </el-checkbox>
+            </div>
+          </el-checkbox-group>
+          <div v-else>
+            <el-empty />
+          </div>
+        </div>
+        <!-- 下载选项 -->
+        <div v-if="noteStore?.note?.note_id" class="custom-download">
+          <!-- 下载设置 -->
+          <el-form label-width="6rem">
+            <el-form-item label="标题">
+              <el-input v-model="state.title" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="下载格式">
+              <el-radio-group
+                :model-value="
+                  noteStore?.note?.type
+                    ? settingStorageStore.DownloadFormatObj.normal
+                    : DownloadFormat.default
+                "
+                @change="handleDownloadFormatChnage($event, 'normal')"
+              >
+                <el-radio :value="DownloadFormat.default">普通</el-radio>
+                <el-radio :value="DownloadFormat.origin"> 高清 </el-radio>
+                <el-radio :value="DownloadFormat.jpg"> jpg </el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="实况">
+              <el-checkbox v-model="settingStorageStore.preferLive">
+                <div class="flex-center">优先下载实况</div>
+              </el-checkbox>
+            </el-form-item>
+          </el-form>
+          <!-- 下载按钮 -->
+          <div class="flex-center">
+            <el-checkbox
+              border
+              @change="handleCheckAllChange"
+              v-model="checkAll"
+              :indeterminate="checkAllIndeterminate"
+              style="margin: 0 10px"
+            >
+              全选({{ state.checkList.length }})
+            </el-checkbox>
+            <el-button
+              type="primary"
+              @click="downLoad()"
+              :disabled="state.checkList.length == 0"
+            >
+              浏览器下载
+            </el-button>
+            <el-button
+              color="#3f85ff"
+              @click="downLoad(true)"
+              :disabled="state.checkList.length == 0"
+            >
+              aria2下载
+            </el-button>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        lazy
+        name="video"
+        label="视频"
+        :disabled="!noteStore?.note?.video?.capa"
       >
-        <div
-          class="file-list"
-          :style="`grid-template-columns: repeat(${settingStorageStore.downloadContainerCol}, 1fr)`"
-        >
-          <el-checkbox
-            :value="index"
-            size="large"
-            v-for="(item, index) in noteStore?.image_list"
-            :key="index"
+        <div class="download-container_top">
+          <div
+            v-if="noteStore?.note?.image_list?.[0]?.url_default"
+            class="file-list"
+            :style="`grid-template-columns: repeat(${settingStorageStore.downloadContainerCol}, 1fr)`"
           >
             <div class="item">
-              <img :src="item.url_default" />
-              <div class="progress">{{ item.progress || '0%' }}</div>
-              <div v-if="item.live_photo" class="tag">实况</div>
-              <div v-else-if="noteStore.type == 'video'" class="tag">视频</div>
+              <img :src="noteStore?.note?.image_list?.[0]?.url_default" />
+              <div class="tag">视频</div>
             </div>
-          </el-checkbox>
+          </div>
+          <div v-else>
+            <el-empty />
+          </div>
         </div>
-      </el-checkbox-group>
-      <div v-else>
-        <el-empty />
-      </div>
-    </div>
 
-    <!-- 下载选项 -->
-    <div v-if="noteStore?.note_id" class="custom-download">
-      <!-- 下载设置 -->
-      <el-form label-width="6rem">
-        <el-form-item label="标题">
-          <el-input v-model="state.title" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="下载格式">
-          <el-radio-group
-            :model-value="
-              noteStore?.type
-                ? settingStorageStore.DownloadFormatObj[noteStore?.type]
-                : DownloadFormat.default
-            "
-            @change="handleDownloadFormatChnage"
-          >
-            <el-radio :value="DownloadFormat.default">普通</el-radio>
-            <el-radio :value="DownloadFormat.origin"> 高清 </el-radio>
-            <el-radio
-              :value="DownloadFormat.jpg"
-              v-if="noteStore?.type == 'normal'"
-            >
-              jpg
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="实况" v-if="noteStore?.type == 'normal'">
-          <el-checkbox v-model="settingStorageStore.preferLive">
-            <div class="flex-center">优先下载实况</div>
-          </el-checkbox>
-        </el-form-item>
-      </el-form>
-      <!-- 下载按钮 -->
-      <div class="flex-center">
-        <el-checkbox
-          border
-          @change="handleCheckAllChange"
-          v-model="checkAll"
-          :indeterminate="checkAllIndeterminate"
-          style="margin: 0 10px"
-        >
-          全选({{ state.checkList.length }})
-        </el-checkbox>
-        <el-button
-          type="primary"
-          @click="downLoad()"
-          :disabled="state.checkList.length == 0"
-        >
-          浏览器下载
-        </el-button>
-        <el-button
-          color="#3f85ff"
-          @click="downLoad(true)"
-          :disabled="state.checkList.length == 0"
-        >
-          aria2下载
-        </el-button>
-      </div>
-    </div>
+        <!-- 下载选项 -->
+        <div v-if="noteStore?.note?.note_id" class="custom-download">
+          <!-- 下载设置 -->
+          <el-form label-width="6rem">
+            <el-form-item label="标题">
+              <el-input v-model="state.title" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="下载格式">
+              <el-radio-group
+                :model-value="
+                  noteStore?.note?.type
+                    ? settingStorageStore.DownloadFormatObj.video
+                    : DownloadFormat.default
+                "
+                @change="handleDownloadFormatChnage($event, 'video')"
+              >
+                <el-radio :value="DownloadFormat.default">普通</el-radio>
+                <el-radio :value="DownloadFormat.origin">高清</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <!-- 下载按钮 -->
+          <div class="flex-center">
+            <el-button type="primary" @click="downLoad()">
+              浏览器下载
+            </el-button>
+            <el-button color="#3f85ff" @click="downLoad(true)">
+              aria2下载
+            </el-button>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -111,7 +162,13 @@ import {
   videoRequestBaseUrl,
 } from '@/constant'
 import { reqAria2Download } from '@/api/jsonrpc'
-
+// 接收关闭函数
+const props = defineProps({
+  closeDialog: {
+    type: Function,
+    required: true,
+  },
+})
 // 数据
 const settingStorageStore = useSettingStorageStore()
 const noteStore = useNoteStore()
@@ -125,23 +182,25 @@ const state = reactive<{
 /* ========== 列表 ========== */
 // 全选
 const checkAll = computed(() => {
-  if (noteStore.note_id) {
-    return state.checkList.length == noteStore.image_list.length
+  if (noteStore.note?.note_id) {
+    return state.checkList.length == noteStore.note?.image_list.length
   }
 })
 // 选择部分
 const checkAllIndeterminate = computed(() => {
-  const listLength = noteStore.image_list.length || 0
+  const listLength = noteStore.note?.image_list.length || 0
   return state.checkList.length < listLength && state.checkList.length > 0
 })
 
 // 处理全选
 function handleCheckAllChange(val: CheckboxValueType) {
-  if (noteStore.note_id) {
+  if (noteStore.note?.note_id) {
     if (val) {
-      state.checkList = noteStore?.image_list.map((item: any, index: any) => {
-        return index
-      })
+      state.checkList = noteStore?.note?.image_list.map(
+        (item: any, index: any) => {
+          return index
+        }
+      )
     } else {
       state.checkList = []
     }
@@ -149,31 +208,44 @@ function handleCheckAllChange(val: CheckboxValueType) {
 }
 // 获取下载列表
 function getDonwloadItemList() {
-  const list = noteStore?.image_list.filter((_: any, index: number) => {
+  const list = noteStore?.note?.image_list.filter((_: any, index: number) => {
     return state.checkList.includes(index)
   })
   return list
 }
 
+/* ========== tab ========== */
+const activeTab = ref('normal')
+// 监听变动
+watch(
+  [
+    () => {
+      return noteStore.note?.note_id
+    },
+  ],
+  () => {
+    activeTab.value = noteStore.note?.type || 'normal'
+    initState()
+  },
+  {
+    immediate: true,
+  }
+)
 /* ========== 初始化数据 ========== */
 async function initState() {
   state.title =
-    noteStore?.title?.slice(0, 80) || noteStore?.desc?.slice(0, 80) || ''
+    noteStore?.note?.title?.slice(0, 220) ||
+    noteStore?.note?.desc?.slice(0, 220) ||
+    ''
   handleCheckAllChange(true)
 }
-onMounted(() => {
-  initState()
-})
 
 /* ========== 底部 ========== */
 // 处理下载格式变化
-function handleDownloadFormatChnage(e: any) {
+function handleDownloadFormatChnage(e: any, type: 'normal' | 'video') {
+  console.log('修改下载格式', e)
   // 修改类型
-  settingStorageStore.DownloadFormatObj[noteStore?.type!] = e
-  // 重置进度
-  noteStore?.image_list.forEach((item: { progress: string }) => {
-    item.progress = '0%'
-  })
+  settingStorageStore.DownloadFormatObj[type] = e
 }
 // 生成要下载的文件列表
 async function getDownloadUrlList() {
@@ -188,20 +260,21 @@ async function getDownloadUrlList() {
   const { useNameAsDir, useTitleAsDir } = settingStorageStore
   const resList = []
   const notePublishTime = formatTime(
-    noteStore.time,
+    noteStore.note?.time,
     settingStorageStore.timeFormatRule
   )
   let redId = await getRedId()
 
-  for (let index = 0; index < list.length; index++) {
+  const len = activeTab.value == 'normal' ? list.length : 1
+  for (let index = 0; index < len; index++) {
     const item = list[index]
     let url = getDownloadUrl(item)!
     let sub = '' // 后缀
     let dir = '' // 目录
     let name = '' // 文件名
     /* 路径处理 */
-    if (useNameAsDir && noteStore.user.nickname) {
-      dir += noteStore?.user.nickname + '/'
+    if (useNameAsDir && noteStore.note?.user.nickname) {
+      dir += noteStore?.note?.user.nickname + '/'
     }
     if (useTitleAsDir && state.title) {
       dir += state.title + '/'
@@ -230,11 +303,11 @@ async function getDownloadUrlList() {
         {
           index: index + 1,
           title: state.title,
-          ipLocation: noteStore.ip_location,
-          nickname: noteStore.user.nickname,
-          noteId: noteStore.note_id,
+          ipLocation: noteStore.note?.ip_location,
+          nickname: noteStore.note?.user.nickname,
+          noteId: noteStore.note?.note_id,
           publishTime: notePublishTime,
-          userId: noteStore.user.user_id,
+          userId: noteStore.note?.user.user_id,
           redId,
         },
         settingStorageStore.nameRule,
@@ -253,14 +326,15 @@ async function getDownloadUrlList() {
 
 // 获取单个文件的下载路径
 function getDownloadUrl(file: ImageList) {
-  if (!noteStore.note_id) return
+  if (!noteStore.note?.note_id) return
 
-  const noteType = noteStore.type // 笔记类型
-  const downloadFormat = settingStorageStore.DownloadFormatObj[noteType] // 下载类型
+  const noteType = noteStore.note?.type // 笔记类型
+  // const downloadFormat = settingStorageStore.DownloadFormatObj[noteType] // 下载类型
+  const downloadFormat = settingStorageStore.DownloadFormatObj[activeTab.value] // 下载类型
   const preferLive = settingStorageStore.preferLive // live偏好
   let url = ''
   let data = null // 下载地址数据
-  if (noteType == 'normal') {
+  if (activeTab.value == 'normal') {
     const url = file.url_default
     const key = url.match(fileKeyReg)![0]
     data = {
@@ -270,15 +344,16 @@ function getDownloadUrl(file: ImageList) {
     }
   } else {
     data = {
-      url: noteStore.video?.media?.stream?.h265[0]?.master_url,
+      url: noteStore.note?.video?.media?.stream?.h265[0]?.master_url,
       originUrl:
         getRandomItemFromArray(videoRequestBaseUrl) +
-        noteStore.video?.consumer?.origin_video_key,
+        noteStore.note?.video?.consumer?.origin_video_key,
     }
+    console.log('下载数据', data)
   }
   // 处理下类型
   if (downloadFormat == DownloadFormat.default) {
-    url = data.url
+    url = data.url!
   } else if (downloadFormat == DownloadFormat.origin) {
     url = data.originUrl
   } else if (downloadFormat == DownloadFormat.jpg) {
@@ -293,24 +368,18 @@ function getDownloadUrl(file: ImageList) {
 // 下载
 async function downLoad(useAria2: boolean = false) {
   const list = await getDownloadUrlList()
-  ElMessage.info('开始下载')
   // 开始下载
   if (!useAria2) {
     // 浏览器下载
     list?.forEach((item) => {
-      downloadLargeFile(item.url, item.name, (loaded, total) => {
-        if (total) {
-          item.file.progress = ((loaded / total) * 100).toFixed(2) + '%'
-        } else {
-          item.file.progress =
-            '已下载' + (loaded / 1024 / 1024).toFixed(2) + 'M'
-        }
-      })
+      downloadLargeFile(item.url, item.name)
     })
   } else if (useAria2) {
     // aria2下载
     reqAria2Download(list)
   }
+  ElMessage.success('已开始下载')
+  props.closeDialog()
 }
 </script>
 

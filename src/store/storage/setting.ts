@@ -19,6 +19,7 @@ export interface Setting {
   downloadContainerCol: number
 }
 interface DownloadFormatObj {
+  [key: string]: any
   video: DownloadFormat
   normal: DownloadFormat
 }

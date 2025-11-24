@@ -2,7 +2,6 @@
   <el-drawer
     v-model="isOpenDownloadDialog"
     :size="size"
-    destroy-on-close
     :title="appName"
     class="xiaohongshu-download-script_dialog"
     :class="{
@@ -27,7 +26,6 @@
         </el-button>
       </div>
     </div>
-
     <!-- 容器 拖拽 -->
     <div
       class="drag-line"
@@ -37,7 +35,7 @@
       @mousedown="handleMouseDown"
     ></div>
     <!-- 内容区域 -->
-    <DownloadDilogContent />
+    <DownloadDilogContent :closeDialog="closeDialog" />
   </el-drawer>
 </template>
 
@@ -66,6 +64,10 @@ const isOpenDownloadDialog = computed({
     emit('update:modelValue', val)
   },
 })
+
+function closeDialog() {
+  isOpenDownloadDialog.value = false
+}
 // 容器大小
 const settingStorage = useSettingStorageStore()
 const isDragging = ref(false)

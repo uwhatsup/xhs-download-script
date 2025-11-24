@@ -54,7 +54,6 @@ export interface Image_list {
   url_pre: string
   url_default: string
   live_photo: boolean
-  progress: string
 }
 
 export interface XhsImage {
@@ -71,4 +70,5 @@ export interface XhsImage {
   user: User
   interact_info: Interact_info
   image_list: Image_list[]
+  video: null
 }

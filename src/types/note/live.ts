@@ -37,7 +37,6 @@ export interface Image_list {
   url_pre: string
   live_photo: boolean
   url: string
-  progress: string
 }
 
 export interface User {
@@ -73,4 +72,5 @@ export interface XhsLive {
   note_id: string
   type: 'normal'
   title: string
+  video: null
 }

@@ -16,7 +16,6 @@ export interface Image_list {
   url_pre: string
   url_default: string
   stream: Stream
-  progress: string
 }
 
 export interface Interact_info {
