@@ -59,7 +59,7 @@ async function initEventListener() {
   if (href.startsWith('https://www.xiaohongshu.com/explore/')) {
     const id = pathname.split('/').at(-1)!
     console.log('数据', unsafeWindow.__INITIAL_STATE__)
-    // 查看源代码的时候会发现数据放在哪儿
+    // 查看源代码(全局搜索笔记id)的时候会发现数据放在哪儿
     const noteRes = unsafeWindow.__INITIAL_STATE__.note.noteDetailMap[id].note
     const note = camelToSnake(noteRes) as any
     noteStore.setNote(note)

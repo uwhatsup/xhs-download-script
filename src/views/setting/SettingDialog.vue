@@ -28,6 +28,7 @@ const props = defineProps({
     default: false,
   },
 })
+
 // 计算属性 可以获取 可设置
 const isOpenSettingDialog = computed({
   get: () => props.modelValue,

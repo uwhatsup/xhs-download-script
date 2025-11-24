@@ -58,7 +58,7 @@ export function getFileNameByNamingRule(
 }
 
 export async function getRedId() {
-  console.log('获取小红书号')
+  console.log('获取小红书号 ↓')
   let id = ''
   const settingStore = useSettingStorageStore()
   if (settingStore.nameRule.includes('<小红书号>')) {
@@ -70,6 +70,8 @@ export async function getRedId() {
       const content = await extractHtmlContent(link, '.user-redId')
       id = content.replace('小红书号：', '')
     }
+  } else {
+    console.log('不满足条件 不去获取')
   }
   return id
 }

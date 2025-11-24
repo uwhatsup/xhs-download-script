@@ -115,17 +115,16 @@ onMounted(() => {
   // 初始化数据
   initState()
   // 鼠标移动
-  window.onmousemove = handleWindowMouseMove
+  window.addEventListener('mousemove', handleWindowMouseMove)
   // 鼠标抬起
-  window.onmouseup = handleWindowMouseUp
-  window.onresize = initState
+  window.addEventListener('mouseup', handleWindowMouseUp)
+  // 窗口变化
+  window.addEventListener('resize', initState)
 })
 onUnmounted(() => {
-  // 鼠标移动
-  window.onmousemove = null
-  // 鼠标抬起
-  window.onmouseup = null
-  window.onresize = null
+  window.removeEventListener('mousemove', handleWindowMouseMove)
+  window.removeEventListener('mouseup', handleWindowMouseUp)
+  window.removeEventListener('resize', initState)
 })
 </script>
 

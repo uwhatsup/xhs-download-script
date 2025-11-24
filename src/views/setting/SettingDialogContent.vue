@@ -14,10 +14,11 @@
     </el-form-item>
     <el-form-item label="时间格式">
       <el-input v-model="settingStorageStore.timeFormatRule"></el-input>
-      <div class="form-example important">
+      <div class="form-example">
         <a
           href="https://dayjs.fenxianglu.cn/category/display.html#%E6%A0%BC%E5%BC%8F%E5%8C%96"
           target="_blank"
+          class="link"
         >
           格式参考
         </a>
@@ -38,7 +39,7 @@
     </el-form-item>
     <el-form-item label="下载位置">
       <el-input v-model="settingStorageStore.downloadLocation" />
-      <div class="example">
+      <div class="form-example">
         示例：F:\xiaohongshu 或 /home/download/xiaohongshu
       </div>
     </el-form-item>
@@ -87,7 +88,7 @@ function testRpcConnection() {
   reqAria2Version()
 }
 const noteStore = useNoteStore()
-// 文件名示例
+/* ======= 文件名示例 ========= */
 const exampleName = ref('')
 watch(
   [
@@ -95,7 +96,10 @@ watch(
     () => settingStorageStore.timeFormatRule,
   ],
   async () => {
-    console.log('执行了')
+    if (!noteStore?.title) {
+      exampleName.value = '打开笔记后方可预览'
+      return
+    }
     exampleName.value = getFileNameByNamingRule(
       {
         index: 1,
@@ -117,4 +121,10 @@ watch(
 )
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.link {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+</style>

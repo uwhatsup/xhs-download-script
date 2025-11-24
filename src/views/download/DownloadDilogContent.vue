@@ -8,7 +8,7 @@
       >
         <div
           class="file-list"
-          :style="`grid-template-columns: repeat(${settingStorageStore.col}, 1fr)`"
+          :style="`grid-template-columns: repeat(${settingStorageStore.downloadContainerCol}, 1fr)`"
         >
           <el-checkbox
             :value="index"
@@ -52,7 +52,7 @@
               :value="DownloadFormat.jpg"
               v-if="noteStore?.type == 'normal'"
             >
-              jpg格式
+              jpg
             </el-radio>
           </el-radio-group>
         </el-form-item>
@@ -164,6 +164,7 @@ async function initState() {
 onMounted(() => {
   initState()
 })
+
 /* ========== 底部 ========== */
 // 处理下载格式变化
 function handleDownloadFormatChnage(e: any) {

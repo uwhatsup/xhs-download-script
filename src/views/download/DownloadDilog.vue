@@ -9,37 +9,35 @@
       drag: isDragging,
     }"
   >
-    <template #default>
-      <div class="tool-box">
-        <!-- 显示尺寸 -->
-        <div class="download-item-size">
-          <div class="title">显示列数：</div>
-          <el-input-number
-            size="small"
-            v-model="settingStorage.col"
-            :min="1"
-            :max="10"
-          />
-        </div>
-        <!-- 设置按钮 -->
-        <div class="setting">
-          <el-button size="small" type="info" @click="emit('settingClick')">
-            设置
-          </el-button>
-        </div>
+    <div class="tool-box">
+      <!-- 显示尺寸 -->
+      <div class="download-item-size">
+        <div class="title">显示列数：</div>
+        <el-input-number
+          size="small"
+          v-model="settingStorage.downloadContainerCol"
+          :min="1"
+          :max="10"
+        />
       </div>
+      <!-- 设置按钮 -->
+      <div class="setting">
+        <el-button size="small" type="info" @click="emit('settingClick')">
+          设置
+        </el-button>
+      </div>
+    </div>
 
-      <!-- 容器 拖拽 -->
-      <div
-        class="drag-line"
-        :class="{
-          active: isDragging,
-        }"
-        @mousedown="handleMouseDown"
-      ></div>
-      <!-- 内容区域 -->
-      <DownloadDilogContent />
-    </template>
+    <!-- 容器 拖拽 -->
+    <div
+      class="drag-line"
+      :class="{
+        active: isDragging,
+      }"
+      @mousedown="handleMouseDown"
+    ></div>
+    <!-- 内容区域 -->
+    <DownloadDilogContent />
   </el-drawer>
 </template>
 
@@ -86,7 +84,7 @@ function handleMouseDown() {
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', () => {
     isDragging.value = false
-    settingStorage.downloadSize = size.value
+    settingStorage.downloadContainerSize = size.value
     document.body.style.cursor = 'auto'
     document.body.style.userSelect = 'auto'
     window.removeEventListener('mousemove', handleMouseMove)
@@ -95,7 +93,7 @@ function handleMouseDown() {
 
 // 图片显示尺寸
 onMounted(() => {
-  size.value = settingStorage.downloadSize
+  size.value = settingStorage.downloadContainerSize
 })
 </script>
 

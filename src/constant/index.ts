@@ -29,5 +29,3 @@ export const defaultFileNameRule = `$<序号>.$
 <标题>
 (<发布时间>)
 `
-
-// 获取文件名的方法 主要是获取前面的
