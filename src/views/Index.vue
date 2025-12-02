@@ -55,10 +55,19 @@ async function initEventListener() {
     return originalXhrSend.apply(this, arguments as any)
   }
   // 直接解析html
-  const { href, pathname } = window.location
-  if (href.startsWith('https://www.xiaohongshu.com/explore/')) {
+  const { pathname } = window.location
+  console.log({ pathname })
+  /* 
+  可能的值
+  用户中 新标签页面打开
+  https://www.xiaohongshu.com/user/profile/5d306b6100000000160077d8/68e41a090000000003035156?xsec_token=ABiVLRKZyMQRmgsw5IpR2CKFXx03fMcjZBl1ixGSUMLfI=&xsec_source=pc_user
+  直接刷新访问
+  https://www.xiaohongshu.com/explore/6929b49b000000001b0238db?xsec_token=ABxLdaQDpIT7bwg8Xn_1ZfbGYuCr58d5DPE5kcjAP4CAo=&xsec_source=pc_user"
+  */
+  const notePageReg = /(\/user\/profile\/.*\/.*)|(\/explore\/.*)/
+  if (notePageReg.test(pathname)) {
     const id = pathname.split('/').at(-1)!
-    console.log('数据', unsafeWindow.__INITIAL_STATE__)
+    console.log('初始化数据', id, unsafeWindow.__INITIAL_STATE__)
     // 查看源代码(全局搜索笔记id)的时候会发现数据放在哪儿
     const noteRes = unsafeWindow.__INITIAL_STATE__.note.noteDetailMap[id].note
     const note = camelToSnake(noteRes) as any

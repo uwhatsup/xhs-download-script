@@ -17,6 +17,7 @@
           v-model="settingStorage.downloadContainerCol"
           :min="1"
           :max="10"
+          style="width: 80px"
         />
       </div>
       <!-- 设置按钮 -->
